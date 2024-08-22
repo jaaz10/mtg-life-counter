@@ -121,13 +121,13 @@ export default function LifeCounter() {
           <View style={styles.divider} />
           <View style={styles.iconContainer}>
             <TouchableOpacity onPress={togglePlayerModal}>
-              <Ionicons name="people" size={40} color="#fff" />
+              <Ionicons name="people" size={48} color="#fff" />
             </TouchableOpacity>
             <TouchableOpacity style={styles.resetButton} onPress={resetCounts}>
-              <Ionicons name="refresh" size={40} color="#fff" />
+              <Ionicons name="refresh" size={48} color="#fff" />
             </TouchableOpacity>
             <TouchableOpacity onPress={rollDice}>
-              <Ionicons name="dice" size={40} color="#fff" />
+              <Ionicons name="dice" size={48} color="#fff" />
             </TouchableOpacity>
           </View>
           <View style={styles.divider} />
@@ -216,6 +216,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingHorizontal: 20,
     borderRadius: 10,
+    marginBottom: 20,
   },
   player2Container: {
     flex: 1,
@@ -224,21 +225,40 @@ const styles = StyleSheet.create({
     transform: [{ rotate: "180deg" }],
     paddingHorizontal: 20,
     borderRadius: 10,
+    marginTop: 20,
+  },
+  grid3Container: {
+    flex: 1,
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 20,
+  },
+  grid4Container: {
+    flex: 1,
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 20,
   },
   player3Container: {
-    flex: 1,
+    width: "48%",
+    aspectRatio: 1,
     alignItems: "center",
     justifyContent: "center",
-    paddingHorizontal: 20,
     borderRadius: 10,
+    marginBottom: 20,
   },
   player4Container: {
-    flex: 1,
+    width: "48%",
+    aspectRatio: 1,
     alignItems: "center",
     justifyContent: "center",
     transform: [{ rotate: "180deg" }],
-    paddingHorizontal: 20,
     borderRadius: 10,
+    marginBottom: 20,
   },
   countContainer: {
     flexDirection: "row",
@@ -247,14 +267,14 @@ const styles = StyleSheet.create({
     width: "80%",
   },
   countText: {
-    fontSize: 120,
+    fontSize: 144,
     color: "#fff",
     flex: 1,
     textAlign: "center",
     fontFamily: "Helvetica Neue",
   },
   buttonText: {
-    fontSize: 48,
+    fontSize: 64,
     color: "#fff",
     paddingHorizontal: 20,
     fontFamily: "Helvetica Neue",
@@ -294,7 +314,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   modalTitle: {
-    fontSize: 24,
+    fontSize: 28,
     marginBottom: 20,
     fontFamily: "Helvetica Neue",
     color: "#1c1c1c",
@@ -310,12 +330,12 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   modalOptionText: {
-    fontSize: 20,
+    fontSize: 24,
     fontFamily: "Helvetica Neue",
     color: "#fff",
   },
   modalResultText: {
-    fontSize: 28,
+    fontSize: 32,
     marginBottom: 20,
     fontFamily: "Helvetica Neue",
     color: "#1c1c1c",
@@ -328,11 +348,11 @@ const styles = StyleSheet.create({
   },
   modalButtonText: {
     color: "#fff",
-    fontSize: 20,
+    fontSize: 24,
     fontFamily: "Helvetica Neue",
   },
   playerTitle: {
-    fontSize: 24,
+    fontSize: 28,
     color: "#fff",
     marginBottom: 10,
     fontFamily: "Helvetica Neue",
