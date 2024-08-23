@@ -271,7 +271,7 @@ const styles = StyleSheet.create({
     color: "#fff",
     flex: 1,
     textAlign: "center",
-    fontFamily: "Helvetica Neue",
+    fontFamily: "SpaceMono-Regular",
   },
   buttonText: {
     fontSize: 64,
