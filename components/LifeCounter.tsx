@@ -1,14 +1,29 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Modal, SafeAreaView, ViewStyle, TextStyle } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Modal,
+  SafeAreaView,
+  ViewStyle,
+  TextStyle,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { useFonts } from 'expo-font';
-import * as SplashScreen from 'expo-splash-screen';
-import { Asset } from 'expo-asset';
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
+import { Asset } from "expo-asset";
 
 // Keep the device's screen on while the app is running
 SplashScreen.preventAutoHideAsync();
 
-type Position = 'top' | 'bottom' | 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight';
+type Position =
+  | "top"
+  | "bottom"
+  | "topLeft"
+  | "topRight"
+  | "bottomLeft"
+  | "bottomRight";
 
 type StyleKey = keyof typeof styles;
 
@@ -18,7 +33,9 @@ const getDynamicStyle = (styleKey: string): ViewStyle => {
 
 export default function LifeCounter() {
   const [fontsLoaded] = useFonts({
-    'SpaceMono-Regular': Asset.fromModule(require('../assets/fonts/SpaceMono-Regular.ttf')).uri,
+    "SpaceMono-Regular": Asset.fromModule(
+      require("../assets/fonts/SpaceMono-Regular.ttf"),
+    ).uri,
   });
 
   const [playerCounts, setPlayerCounts] = useState<number[]>([20, 20, 20, 20]);
@@ -80,7 +97,12 @@ export default function LifeCounter() {
 
   const playerColors = ["#FF6B6B", "#4ECDC4", "#FFE66D", "#FF9F40"];
 
-  const renderPlayerContainer = (player: number, count: number, color: string, position: Position) => {
+  const renderPlayerContainer = (
+    player: number,
+    count: number,
+    color: string,
+    position: Position,
+  ) => {
     const containerStyle = `player${numPlayers}${position}` as StyleKey;
     const titleStyle = `playerTitle${position}` as StyleKey;
     const countContainerStyle = `countContainer${position}` as StyleKey;
@@ -94,13 +116,32 @@ export default function LifeCounter() {
           getDynamicStyle(containerStyle),
         ]}
       >
-        <Text style={[styles.playerTitle, getDynamicStyle(titleStyle) as TextStyle]}>Player {player + 1}</Text>
-        <View style={[styles.countContainer, getDynamicStyle(countContainerStyle) as ViewStyle]}>
-          <TouchableOpacity onPress={() => decrementPlayer(player)} style={styles.button}>
+        <Text
+          style={[styles.playerTitle, getDynamicStyle(titleStyle) as TextStyle]}
+        >
+          Player {player + 1}
+        </Text>
+        <View
+          style={[
+            styles.countContainer,
+            getDynamicStyle(countContainerStyle) as ViewStyle,
+          ]}
+        >
+          <TouchableOpacity
+            onPress={() => decrementPlayer(player)}
+            style={styles.button}
+          >
             <Text style={styles.buttonText}>-</Text>
           </TouchableOpacity>
-          <Text style={[styles.countText, numPlayers > 2 && styles.smallerText]}>{count}</Text>
-          <TouchableOpacity onPress={() => incrementPlayer(player)} style={styles.button}>
+          <Text
+            style={[styles.countText, numPlayers > 2 && styles.smallerText]}
+          >
+            {count}
+          </Text>
+          <TouchableOpacity
+            onPress={() => incrementPlayer(player)}
+            style={styles.button}
+          >
             <Text style={styles.buttonText}>+</Text>
           </TouchableOpacity>
         </View>
@@ -111,15 +152,27 @@ export default function LifeCounter() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container} onLayout={onLayoutRootView}>
-        <View style={[styles.playersContainer, getDynamicStyle(`container${numPlayers}`)]}>
+        <View
+          style={[
+            styles.playersContainer,
+            getDynamicStyle(`container${numPlayers}`),
+          ]}
+        >
           {playerCounts.slice(0, numPlayers).map((count, index) => {
             let position: Position;
             if (numPlayers === 2) {
-              position = index === 0 ? 'bottom' : 'top';
+              position = index === 0 ? "bottom" : "top";
             } else {
-              position = ['topLeft', 'topRight', 'bottomLeft', 'bottomRight'][index] as Position;
+              position = ["topLeft", "topRight", "bottomLeft", "bottomRight"][
+                index
+              ] as Position;
             }
-            return renderPlayerContainer(index, count, playerColors[index], position);
+            return renderPlayerContainer(
+              index,
+              count,
+              playerColors[index],
+              position,
+            );
           })}
         </View>
         <View style={styles.middleContainer}>
@@ -129,7 +182,10 @@ export default function LifeCounter() {
               <TouchableOpacity onPress={togglePlayerModal}>
                 <Ionicons name="people" size={48} color="#fff" />
               </TouchableOpacity>
-              <TouchableOpacity style={styles.resetButton} onPress={resetCounts}>
+              <TouchableOpacity
+                style={styles.resetButton}
+                onPress={resetCounts}
+              >
                 <Ionicons name="refresh" size={48} color="#fff" />
               </TouchableOpacity>
               <TouchableOpacity onPress={rollDice}>
@@ -147,7 +203,10 @@ export default function LifeCounter() {
                 {[2, 3, 4].map((num) => (
                   <TouchableOpacity
                     key={num}
-                    style={[styles.modalOption, { backgroundColor: playerColors[num - 1] }]}
+                    style={[
+                      styles.modalOption,
+                      { backgroundColor: playerColors[num - 1] },
+                    ]}
                     onPress={() => setPlayers(num)}
                   >
                     <Text style={styles.modalOptionText}>{num} Players</Text>
@@ -161,7 +220,9 @@ export default function LifeCounter() {
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
               <Text style={styles.modalTitle}>Dice Roll Result</Text>
-              <Text style={styles.modalResultText}>{diceRollResult} goes first!</Text>
+              <Text style={styles.modalResultText}>
+                {diceRollResult} goes first!
+              </Text>
               <TouchableOpacity
                 style={styles.modalButton}
                 onPress={() => setShowDiceRollResult(false)}
@@ -189,15 +250,15 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   container2: {
-    flexDirection: 'column',
+    flexDirection: "column",
   },
   container3: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
   },
   container4: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
   },
   playerContainer: {
     alignItems: "center",
@@ -212,36 +273,36 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   player3topLeft: {
-    width: '50%',
-    height: '50%',
+    width: "50%",
+    height: "50%",
     transform: [{ rotate: "180deg" }],
   },
   player3topRight: {
-    width: '50%',
-    height: '50%',
+    width: "50%",
+    height: "50%",
     transform: [{ rotate: "180deg" }],
   },
   player3bottomLeft: {
-    width: '100%',
-    height: '50%',
+    width: "100%",
+    height: "50%",
   },
   player4topLeft: {
-    width: '50%',
-    height: '50%',
+    width: "50%",
+    height: "50%",
     transform: [{ rotate: "180deg" }],
   },
   player4topRight: {
-    width: '50%',
-    height: '50%',
+    width: "50%",
+    height: "50%",
     transform: [{ rotate: "180deg" }],
   },
   player4bottomLeft: {
-    width: '50%',
-    height: '50%',
+    width: "50%",
+    height: "50%",
   },
   player4bottomRight: {
-    width: '50%',
-    height: '50%',
+    width: "50%",
+    height: "50%",
   },
   countContainer: {
     flexDirection: "row",
@@ -298,32 +359,36 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "rgba(0, 0, 0, 0.5)",
+    paddingHorizontal: 20,
   },
   modalContent: {
     backgroundColor: "#fff",
     borderRadius: 10,
     padding: 20,
     alignItems: "center",
+    width: "80%",
+    maxWidth: 300,
   },
   modalTitle: {
-    fontSize: 28,
+    fontSize: 24,
     marginBottom: 20,
     fontFamily: "SpaceMono-Regular",
     color: "#1c1c1c",
+    textAlign: "center",
   },
   modalOptions: {
-    flexDirection: "row",
-    justifyContent: "space-between",
     width: "100%",
   },
   modalOption: {
-    paddingVertical: 10,
+    paddingVertical: 15,
     paddingHorizontal: 20,
     borderRadius: 10,
-    marginHorizontal: 5,
+    marginVertical: 5,
+    width: "100%",
+    alignItems: "center",
   },
   modalOptionText: {
-    fontSize: 24,
+    fontSize: 20,
     fontFamily: "SpaceMono-Regular",
     color: "#fff",
   },
