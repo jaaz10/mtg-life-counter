@@ -107,6 +107,9 @@ export default function LifeCounter() {
     const titleStyle = `playerTitle${position}` as StyleKey;
     const countContainerStyle = `countContainer${position}` as StyleKey;
 
+    // Determine if the content should be rotated (for top players)
+    const shouldRotate = position.includes("top");
+
     return (
       <View
         key={player}
@@ -117,7 +120,11 @@ export default function LifeCounter() {
         ]}
       >
         <Text
-          style={[styles.playerTitle, getDynamicStyle(titleStyle) as TextStyle]}
+          style={[
+            styles.playerTitle,
+            getDynamicStyle(titleStyle) as TextStyle,
+            shouldRotate && styles.rotatedText,
+          ]}
         >
           Player {player + 1}
         </Text>
@@ -131,10 +138,18 @@ export default function LifeCounter() {
             onPress={() => decrementPlayer(player)}
             style={styles.button}
           >
-            <Text style={styles.buttonText}>-</Text>
+            <Text
+              style={[styles.buttonText, shouldRotate && styles.rotatedText]}
+            >
+              -
+            </Text>
           </TouchableOpacity>
           <Text
-            style={[styles.countText, numPlayers > 2 && styles.smallerText]}
+            style={[
+              styles.countText,
+              numPlayers > 2 && styles.smallerText,
+              shouldRotate && styles.rotatedText,
+            ]}
           >
             {count}
           </Text>
@@ -142,7 +157,11 @@ export default function LifeCounter() {
             onPress={() => incrementPlayer(player)}
             style={styles.button}
           >
-            <Text style={styles.buttonText}>+</Text>
+            <Text
+              style={[styles.buttonText, shouldRotate && styles.rotatedText]}
+            >
+              +
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -162,8 +181,10 @@ export default function LifeCounter() {
             let position: Position;
             if (numPlayers === 2) {
               position = index === 0 ? "bottom" : "top";
+            } else if (numPlayers === 3) {
+              position = ["bottom", "topLeft", "topRight"][index] as Position;
             } else {
-              position = ["topLeft", "topRight", "bottomLeft", "bottomRight"][
+              position = ["bottomLeft", "bottomRight", "topLeft", "topRight"][
                 index
               ] as Position;
             }
@@ -267,7 +288,6 @@ const styles = StyleSheet.create({
   },
   player2top: {
     flex: 1,
-    transform: [{ rotate: "180deg" }],
   },
   player2bottom: {
     flex: 1,
@@ -275,26 +295,22 @@ const styles = StyleSheet.create({
   player3topLeft: {
     width: "50%",
     height: "50%",
-    transform: [{ rotate: "180deg" }],
   },
   player3topRight: {
     width: "50%",
     height: "50%",
-    transform: [{ rotate: "180deg" }],
   },
-  player3bottomLeft: {
+  player3bottom: {
     width: "100%",
     height: "50%",
   },
   player4topLeft: {
     width: "50%",
     height: "50%",
-    transform: [{ rotate: "180deg" }],
   },
   player4topRight: {
     width: "50%",
     height: "50%",
-    transform: [{ rotate: "180deg" }],
   },
   player4bottomLeft: {
     width: "50%",
@@ -310,9 +326,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     width: "100%",
   },
-  countContainertop: {
-    transform: [{ rotate: "180deg" }],
-  },
+  countContainertop: {},
+  countContainertopLeft: {},
+  countContainertopRight: {},
   countText: {
     fontSize: 72,
     color: "#fff",
@@ -331,8 +347,16 @@ const styles = StyleSheet.create({
     fontFamily: "SpaceMono-Regular",
   },
   middleContainer: {
+    position: "absolute",
+    top: "50%",
+    left: 0,
+    right: 0,
+    transform: [{ translateY: -50 }],
     alignItems: "center",
     marginVertical: 10,
+    zIndex: 1,
+    backgroundColor: "rgb(28, 28, 28)",
+    paddingVertical: 10,
   },
   dividerContainer: {
     flexDirection: "row",
@@ -415,13 +439,10 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     fontFamily: "SpaceMono-Regular",
   },
-  playerTitletop: {
-    transform: [{ rotate: "180deg" }],
-  },
-  playerTitletopLeft: {
-    transform: [{ rotate: "180deg" }],
-  },
-  playerTitletopRight: {
+  playerTitletop: {},
+  playerTitletopLeft: {},
+  playerTitletopRight: {},
+  rotatedText: {
     transform: [{ rotate: "180deg" }],
   },
 });
