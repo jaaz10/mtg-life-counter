@@ -62,15 +62,25 @@ export default function LifeCounter() {
         styles[`player${numPlayers}${position}`],
       ]}
     >
-      <Text style={styles.playerTitle}>Player {player + 1}</Text>
-      <View style={styles.countContainer}>
-        <TouchableOpacity onPress={() => decrementPlayer(player)}>
+      <Text style={[styles.playerTitle, styles[`playerTitle${position}`]]}>
+        Player {player + 1}
+      </Text>
+      <View
+        style={[styles.countContainer, styles[`countContainer${position}`]]}
+      >
+        <TouchableOpacity
+          onPress={() => decrementPlayer(player)}
+          style={styles.button}
+        >
           <Text style={styles.buttonText}>-</Text>
         </TouchableOpacity>
         <Text style={[styles.countText, numPlayers > 2 && styles.smallerText]}>
           {count}
         </Text>
-        <TouchableOpacity onPress={() => incrementPlayer(player)}>
+        <TouchableOpacity
+          onPress={() => incrementPlayer(player)}
+          style={styles.button}
+        >
           <Text style={styles.buttonText}>+</Text>
         </TouchableOpacity>
       </View>
@@ -227,22 +237,29 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    width: "80%",
+    width: "100%",
+  },
+  countContainertopLeft: {
+    transform: [{ rotate: "180deg" }],
+  },
+  countContainertopRight: {
+    transform: [{ rotate: "180deg" }],
   },
   countText: {
-    fontSize: 144,
+    fontSize: 72,
     color: "#fff",
-    flex: 1,
     textAlign: "center",
     fontFamily: "SpaceMono-Regular",
   },
   smallerText: {
-    fontSize: 96,
+    fontSize: 64,
+  },
+  button: {
+    padding: 10,
   },
   buttonText: {
-    fontSize: 64,
+    fontSize: 48,
     color: "#fff",
-    paddingHorizontal: 20,
     fontFamily: "Helvetica Neue",
   },
   middleContainer: {
@@ -321,9 +338,15 @@ const styles = StyleSheet.create({
     fontFamily: "Helvetica Neue",
   },
   playerTitle: {
-    fontSize: 28,
+    fontSize: 24,
     color: "#fff",
     marginBottom: 10,
     fontFamily: "Helvetica Neue",
+  },
+  playerTitletopLeft: {
+    transform: [{ rotate: "180deg" }],
+  },
+  playerTitletopRight: {
+    transform: [{ rotate: "180deg" }],
   },
 });
