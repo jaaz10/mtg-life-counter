@@ -43,6 +43,11 @@ export default function LifeCounter() {
   const [showPlayerModal, setShowPlayerModal] = useState<boolean>(false);
   const [showDiceRollResult, setShowDiceRollResult] = useState<boolean>(false);
   const [diceRollResult, setDiceRollResult] = useState<string>("");
+  const [commanderDamage, setCommanderDamage] = useState<number[][]>(
+    Array(4).fill(Array(4).fill(0)),
+  );
+  const [showCommanderDamageModal, setShowCommanderDamageModal] =
+    useState<boolean>(false);
 
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {
@@ -76,6 +81,7 @@ export default function LifeCounter() {
 
   const resetCounts = () => {
     setPlayerCounts([20, 20, 20, 20]);
+    setCommanderDamage(Array(4).fill(Array(4).fill(0)));
   };
 
   const togglePlayerModal = () => {
@@ -93,6 +99,19 @@ export default function LifeCounter() {
     const result = players[randomIndex];
     setDiceRollResult(result);
     setShowDiceRollResult(true);
+  };
+
+  const updateCommanderDamage = (
+    attacker: number,
+    defender: number,
+    damage: number,
+  ) => {
+    const newCommanderDamage = commanderDamage.map((row, i) =>
+      row.map((val, j) =>
+        i === attacker && j === defender ? Math.max(0, val + damage) : val,
+      ),
+    );
+    setCommanderDamage(newCommanderDamage);
   };
 
   const playerColors = ["#FF6B6B", "#4ECDC4", "#FFE66D", "#FF9F40"];
@@ -180,7 +199,7 @@ export default function LifeCounter() {
           {playerCounts.slice(0, numPlayers).map((count, index) => {
             let position: Position;
             if (numPlayers === 2) {
-              position = index === 0 ? "bottom" : "top";
+              position = index === 0 ? "top" : "bottom";
             } else if (numPlayers === 3) {
               position = ["bottom", "topLeft", "topRight"][index] as Position;
             } else {
@@ -211,6 +230,11 @@ export default function LifeCounter() {
               </TouchableOpacity>
               <TouchableOpacity onPress={rollDice}>
                 <Ionicons name="dice" size={48} color="#fff" />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => setShowCommanderDamageModal(true)}
+              >
+                <Ionicons name="shield" size={48} color="#fff" />
               </TouchableOpacity>
             </View>
             <View style={styles.divider} />
@@ -247,6 +271,60 @@ export default function LifeCounter() {
               <TouchableOpacity
                 style={styles.modalButton}
                 onPress={() => setShowDiceRollResult(false)}
+              >
+                <Text style={styles.modalButtonText}>Close</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+        <Modal
+          visible={showCommanderDamageModal}
+          animationType="slide"
+          transparent
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalTitle}>Commander Damage</Text>
+              {playerCounts.slice(0, numPlayers).map((_, attacker) => (
+                <View key={attacker} style={styles.commanderDamageRow}>
+                  <Text style={styles.commanderDamageLabel}>
+                    Player {attacker + 1}
+                  </Text>
+                  {playerCounts.slice(0, numPlayers).map(
+                    (_, defender) =>
+                      attacker !== defender && (
+                        <View key={defender} style={styles.commanderDamageCell}>
+                          <Text style={styles.commanderDamageValue}>
+                            {commanderDamage[attacker][defender]}
+                          </Text>
+                          <TouchableOpacity
+                            onPress={() =>
+                              updateCommanderDamage(attacker, defender, 1)
+                            }
+                            style={styles.commanderDamageButton}
+                          >
+                            <Text style={styles.commanderDamageButtonText}>
+                              +
+                            </Text>
+                          </TouchableOpacity>
+                          <TouchableOpacity
+                            onPress={() =>
+                              updateCommanderDamage(attacker, defender, -1)
+                            }
+                            style={styles.commanderDamageButton}
+                          >
+                            <Text style={styles.commanderDamageButtonText}>
+                              -
+                            </Text>
+                          </TouchableOpacity>
+                        </View>
+                      ),
+                  )}
+                </View>
+              ))}
+              <TouchableOpacity
+                style={styles.modalButton}
+                onPress={() => setShowCommanderDamageModal(false)}
               >
                 <Text style={styles.modalButtonText}>Close</Text>
               </TouchableOpacity>
@@ -370,13 +448,10 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "space-evenly",
     alignItems: "center",
     width: "100%",
-    paddingHorizontal: 40,
-  },
-  resetButton: {
-    marginHorizontal: 40,
+    paddingHorizontal: 20,
   },
   modalContainer: {
     flex: 1,
@@ -444,5 +519,42 @@ const styles = StyleSheet.create({
   playerTitletopRight: {},
   rotatedText: {
     transform: [{ rotate: "180deg" }],
+  },
+
+  commanderDamageRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  commanderDamageLabel: {
+    width: 80,
+    fontSize: 16,
+    fontFamily: "SpaceMono-Regular",
+    color: "#1c1c1c",
+  },
+  commanderDamageCell: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginRight: 10,
+  },
+  commanderDamageValue: {
+    fontSize: 18,
+    fontFamily: "SpaceMono-Regular",
+    color: "#1c1c1c",
+    marginRight: 5,
+  },
+  commanderDamageButton: {
+    backgroundColor: "#007AFF",
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    justifyContent: "center",
+    alignItems: "center",
+    marginHorizontal: 2,
+  },
+  commanderDamageButtonText: {
+    color: "#fff",
+    fontSize: 20,
+    fontFamily: "SpaceMono-Regular",
   },
 });
