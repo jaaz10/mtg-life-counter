@@ -465,8 +465,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 20,
     alignItems: "center",
-    width: "80%",
-    maxWidth: 300,
+    width: "95%",
+    maxWidth: 500,
   },
   modalTitle: {
     fontSize: 24,
