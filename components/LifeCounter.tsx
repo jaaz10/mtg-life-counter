@@ -48,6 +48,8 @@ export default function LifeCounter() {
   );
   const [showCommanderDamageModal, setShowCommanderDamageModal] =
     useState<boolean>(false);
+  const [poisonCounters, setPoisonCounters] = useState<number[]>([0, 0, 0, 0]);
+  const [showPoisonModal, setShowPoisonModal] = useState<boolean>(false);
 
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {
@@ -82,6 +84,7 @@ export default function LifeCounter() {
   const resetCounts = () => {
     setPlayerCounts([20, 20, 20, 20]);
     setCommanderDamage(Array(4).fill(Array(4).fill(0)));
+    setPoisonCounters([0, 0, 0, 0]);
   };
 
   const togglePlayerModal = () => {
@@ -112,6 +115,12 @@ export default function LifeCounter() {
       ),
     );
     setCommanderDamage(newCommanderDamage);
+  };
+
+  const updatePoisonCounter = (player: number, change: number) => {
+    const newPoisonCounters = [...poisonCounters];
+    newPoisonCounters[player] = Math.max(0, newPoisonCounters[player] + change);
+    setPoisonCounters(newPoisonCounters);
   };
 
   const playerColors = ["#FF6B6B", "#4ECDC4", "#FFE66D", "#FF9F40"];
@@ -236,6 +245,9 @@ export default function LifeCounter() {
               >
                 <Ionicons name="shield" size={48} color="#fff" />
               </TouchableOpacity>
+              <TouchableOpacity onPress={() => setShowPoisonModal(true)}>
+                <Ionicons name="flask" size={48} color="#fff" />
+              </TouchableOpacity>
             </View>
             <View style={styles.divider} />
           </View>
@@ -325,6 +337,43 @@ export default function LifeCounter() {
               <TouchableOpacity
                 style={styles.modalButton}
                 onPress={() => setShowCommanderDamageModal(false)}
+              >
+                <Text style={styles.modalButtonText}>Close</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+        <Modal visible={showPoisonModal} animationType="slide" transparent>
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalTitle}>Poison Counters</Text>
+              {playerCounts.slice(0, numPlayers).map((_, player) => (
+                <View key={player} style={styles.poisonCounterRow}>
+                  <Text style={styles.poisonCounterLabel}>
+                    Player {player + 1}
+                  </Text>
+                  <View style={styles.poisonCounterCell}>
+                    <TouchableOpacity
+                      onPress={() => updatePoisonCounter(player, -1)}
+                      style={styles.poisonCounterButton}
+                    >
+                      <Text style={styles.poisonCounterButtonText}>-</Text>
+                    </TouchableOpacity>
+                    <Text style={styles.poisonCounterValue}>
+                      {poisonCounters[player]}
+                    </Text>
+                    <TouchableOpacity
+                      onPress={() => updatePoisonCounter(player, 1)}
+                      style={styles.poisonCounterButton}
+                    >
+                      <Text style={styles.poisonCounterButtonText}>+</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              ))}
+              <TouchableOpacity
+                style={styles.modalButton}
+                onPress={() => setShowPoisonModal(false)}
               >
                 <Text style={styles.modalButtonText}>Close</Text>
               </TouchableOpacity>
@@ -520,7 +569,6 @@ const styles = StyleSheet.create({
   rotatedText: {
     transform: [{ rotate: "180deg" }],
   },
-
   commanderDamageRow: {
     flexDirection: "row",
     alignItems: "center",
@@ -556,5 +604,45 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 20,
     fontFamily: "SpaceMono-Regular",
+  },
+  poisonCounterRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 10,
+    width: "100%",
+  },
+  poisonCounterLabel: {
+    fontSize: 16,
+    fontFamily: "SpaceMono-Regular",
+    color: "#1c1c1c",
+    width: "40%",
+  },
+  poisonCounterCell: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    width: "60%",
+  },
+  poisonCounterButton: {
+    backgroundColor: "#007AFF",
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    justifyContent: "center",
+    alignItems: "center",
+    marginHorizontal: 5,
+  },
+  poisonCounterButtonText: {
+    color: "#fff",
+    fontSize: 20,
+    fontFamily: "SpaceMono-Regular",
+  },
+  poisonCounterValue: {
+    fontSize: 18,
+    fontFamily: "SpaceMono-Regular",
+    color: "#1c1c1c",
+    minWidth: 30,
+    textAlign: "center",
   },
 });
