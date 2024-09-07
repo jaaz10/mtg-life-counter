@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Modal,
+  ScrollView,
   SafeAreaView,
   ViewStyle,
   TextStyle,
@@ -297,43 +298,64 @@ export default function LifeCounter() {
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
               <Text style={styles.modalTitle}>Commander Damage</Text>
-              {playerCounts.slice(0, numPlayers).map((_, attacker) => (
-                <View key={attacker} style={styles.commanderDamageRow}>
-                  <Text style={styles.commanderDamageLabel}>
-                    Player {attacker + 1}
-                  </Text>
-                  {playerCounts.slice(0, numPlayers).map(
-                    (_, defender) =>
-                      attacker !== defender && (
-                        <View key={defender} style={styles.commanderDamageCell}>
-                          <Text style={styles.commanderDamageValue}>
-                            {commanderDamage[attacker][defender]}
-                          </Text>
-                          <TouchableOpacity
-                            onPress={() =>
-                              updateCommanderDamage(attacker, defender, 1)
-                            }
-                            style={styles.commanderDamageButton}
-                          >
-                            <Text style={styles.commanderDamageButtonText}>
-                              +
-                            </Text>
-                          </TouchableOpacity>
-                          <TouchableOpacity
-                            onPress={() =>
-                              updateCommanderDamage(attacker, defender, -1)
-                            }
-                            style={styles.commanderDamageButton}
-                          >
-                            <Text style={styles.commanderDamageButtonText}>
-                              -
-                            </Text>
-                          </TouchableOpacity>
-                        </View>
-                      ),
-                  )}
+              <ScrollView style={styles.commanderDamageScrollView}>
+                <View style={styles.commanderDamageContainer}>
+                  {playerCounts.slice(0, numPlayers).map((_, attacker) => (
+                    <View key={attacker} style={styles.commanderDamageRow}>
+                      <Text style={styles.commanderDamageLabel}>
+                        Player {attacker + 1}
+                      </Text>
+                      <View style={styles.commanderDamageCells}>
+                        {playerCounts.slice(0, numPlayers).map((_, defender) =>
+                          attacker !== defender ? (
+                            <View
+                              key={defender}
+                              style={styles.commanderDamageCell}
+                            >
+                              <Text style={styles.commanderDamagePlayerLabel}>
+                                P{defender + 1}
+                              </Text>
+                              <Text style={styles.commanderDamageValue}>
+                                {commanderDamage[attacker][defender]}
+                              </Text>
+                              <View style={styles.commanderDamageButtons}>
+                                <TouchableOpacity
+                                  onPress={() =>
+                                    updateCommanderDamage(attacker, defender, 1)
+                                  }
+                                  style={styles.commanderDamageButton}
+                                >
+                                  <Text
+                                    style={styles.commanderDamageButtonText}
+                                  >
+                                    +
+                                  </Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                  onPress={() =>
+                                    updateCommanderDamage(
+                                      attacker,
+                                      defender,
+                                      -1,
+                                    )
+                                  }
+                                  style={styles.commanderDamageButton}
+                                >
+                                  <Text
+                                    style={styles.commanderDamageButtonText}
+                                  >
+                                    -
+                                  </Text>
+                                </TouchableOpacity>
+                              </View>
+                            </View>
+                          ) : null,
+                        )}
+                      </View>
+                    </View>
+                  ))}
                 </View>
-              ))}
+              </ScrollView>
               <TouchableOpacity
                 style={styles.modalButton}
                 onPress={() => setShowCommanderDamageModal(false)}
@@ -516,6 +538,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "95%",
     maxWidth: 500,
+    maxHeight: "80%",
   },
   modalTitle: {
     fontSize: 24,
@@ -569,40 +592,68 @@ const styles = StyleSheet.create({
   rotatedText: {
     transform: [{ rotate: "180deg" }],
   },
+  commanderDamageScrollView: {
+    width: "100%",
+    marginBottom: 20,
+  },
+  commanderDamageContainer: {
+    width: "100%",
+  },
   commanderDamageRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 10,
+    flexDirection: "column",
+    marginBottom: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ccc",
+    paddingBottom: 10,
   },
   commanderDamageLabel: {
-    width: 80,
     fontSize: 16,
     fontFamily: "SpaceMono-Regular",
     color: "#1c1c1c",
+    marginBottom: 8,
+  },
+  commanderDamageCells: {
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    flexWrap: "wrap",
   },
   commanderDamageCell: {
-    flexDirection: "row",
     alignItems: "center",
-    marginRight: 10,
+    marginBottom: 8,
+    marginRight: 8,
+    backgroundColor: "#f0f0f0",
+    borderRadius: 8,
+    padding: 8,
+    minWidth: 70,
   },
-  commanderDamageValue: {
-    fontSize: 18,
+  commanderDamagePlayerLabel: {
+    fontSize: 12,
     fontFamily: "SpaceMono-Regular",
     color: "#1c1c1c",
-    marginRight: 5,
+    marginBottom: 4,
+  },
+  commanderDamageValue: {
+    fontSize: 20,
+    fontFamily: "SpaceMono-Regular",
+    color: "#1c1c1c",
+    marginBottom: 4,
+  },
+  commanderDamageButtons: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
   },
   commanderDamageButton: {
     backgroundColor: "#007AFF",
-    width: 30,
-    height: 30,
-    borderRadius: 15,
+    width: 24,
+    height: 24,
+    borderRadius: 12,
     justifyContent: "center",
     alignItems: "center",
-    marginHorizontal: 2,
   },
   commanderDamageButtonText: {
     color: "#fff",
-    fontSize: 20,
+    fontSize: 16,
     fontFamily: "SpaceMono-Regular",
   },
   poisonCounterRow: {
