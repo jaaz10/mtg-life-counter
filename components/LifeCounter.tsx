@@ -137,7 +137,7 @@ export default function LifeCounter() {
     const countContainerStyle = `countContainer${position}` as StyleKey;
 
     // Determine if the content should be rotated (for top players)
-    const shouldRotate = position.includes("top");
+    const shouldRotate = position.includes("bottom");
 
     return (
       <View
@@ -209,7 +209,7 @@ export default function LifeCounter() {
           {playerCounts.slice(0, numPlayers).map((count, index) => {
             let position: Position;
             if (numPlayers === 2) {
-              position = index === 0 ? "top" : "bottom";
+              position = index === 0 ? "bottom" : "top";
             } else if (numPlayers === 3) {
               position = ["bottom", "topLeft", "topRight"][index] as Position;
             } else {
@@ -247,7 +247,7 @@ export default function LifeCounter() {
                 <Ionicons name="shield" size={48} color="#fff" />
               </TouchableOpacity>
               <TouchableOpacity onPress={() => setShowPoisonModal(true)}>
-                <Ionicons name="flask" size={48} color="#fff" />
+                <Ionicons name="skull" size={48} color="#fff" />
               </TouchableOpacity>
             </View>
             <View style={styles.divider} />
